@@ -15,9 +15,10 @@ public class Loader
 	private List<Integer> vaos = new ArrayList<>();
 	private List<Integer> vbos = new ArrayList<>();
 
-	public Model loadToVAO(float[] positions)
+	public Model loadToVAO(float[] positions, int[] indices)
 	{
 		int vaoID = createVAO();
+		bindIndicesBuffer(indices);
 		storeDataInAttributeList(0, positions);
 		unbindVAO();
 
@@ -61,5 +62,14 @@ public class Loader
 		{
 			glDeleteBuffers(vbo);
 		}
+	}
+
+	private void bindIndicesBuffer(int[] indices)
+	{
+		int vboID = glGenBuffers();
+		vbos.add(vboID);
+
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vboID);
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices, GL_STATIC_DRAW);
 	}
 }

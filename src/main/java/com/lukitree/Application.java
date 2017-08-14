@@ -26,7 +26,13 @@ public class Application extends OpenGLProgram
 						-0.5f, 0.5f, 0.0f,
 				};
 
-		model = loader.loadToVAO(vertices);
+		final int[] indices =
+				{
+						0,1,3,
+						3,1,2,
+				};
+
+		model = loader.loadToVAO(vertices, indices);
 	}
 
 	@Override
