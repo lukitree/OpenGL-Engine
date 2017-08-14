@@ -8,11 +8,6 @@ import static org.lwjgl.opengl.GL30.glBindVertexArray;
 
 public class Renderer
 {
-	public void prepare()
-	{
-		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-	}
-
 	public void render(Model model)
 	{
 		glBindVertexArray(model.getVaoID());
