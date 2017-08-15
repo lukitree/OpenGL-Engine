@@ -30,9 +30,9 @@ public class ShaderLoader
 		List<Integer> shaderList = new ArrayList<>();
 
 		shaderList.add(vertexShader);
-		shaderList.add(tessControlShader);
-		shaderList.add(tessEvalShader);
-		shaderList.add(geometryShader);
+		//shaderList.add(tessControlShader);
+		//shaderList.add(tessEvalShader);
+		//shaderList.add(geometryShader);
 		shaderList.add(fragmentShader);
 
 		program = linkProgram(shaderList);
@@ -61,7 +61,7 @@ public class ShaderLoader
 
 		if(status != 1)
 		{
-			System.err.println("Failed to link program:\n\t" + glGetProgramInfoLog(program));
+			System.err.println("Failed to link program:\n" + glGetProgramInfoLog(program));
 			throw new RuntimeException("Failed to link program");
 		}
 
@@ -101,7 +101,7 @@ public class ShaderLoader
 		if(status != 1)
 		{
 			String type = getShaderType(shader);
-			System.err.println("Failed to compile " + type + " shader:\n\t" + glGetShaderInfoLog(shader));
+			System.err.println("Failed to compile " + type + " shader:\n" + glGetShaderInfoLog(shader));
 			throw new RuntimeException("Failed to compile shader.");
 		}
 
