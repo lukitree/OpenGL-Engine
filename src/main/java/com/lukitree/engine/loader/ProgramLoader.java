@@ -9,8 +9,10 @@ import static org.lwjgl.opengl.GL20.*;
 import static org.lwjgl.opengl.GL32.*;
 import static org.lwjgl.opengl.GL40.*;
 
-public class ShaderLoader
+public class ProgramLoader
 {
+	private static List<Integer> programs = new ArrayList<>();
+
 	public static int createProgram()
 	{
 		int vertexShader, fragmentShader, tessControlShader, tessEvalShader, geometryShader, program;
@@ -43,6 +45,8 @@ public class ShaderLoader
 		glDeleteShader(geometryShader);
 		glDeleteShader(fragmentShader);
 
+		programs.add(program);
+
 		return program;
 	}
 
@@ -70,7 +74,7 @@ public class ShaderLoader
 
 	private static String loadShaderSourceFromFile(String filename)
 	{
-		ClassLoader classLoader = ShaderLoader.class.getClassLoader();
+		ClassLoader classLoader = ProgramLoader.class.getClassLoader();
 		StringBuilder source = new StringBuilder();
 
 		try (BufferedReader reader = new BufferedReader(new InputStreamReader(classLoader.getResourceAsStream ("shaders/" + filename))))
@@ -135,5 +139,13 @@ public class ShaderLoader
 		}
 
 		return shaderType;
+	}
+
+	public static void close()
+	{
+		for(int program : programs)
+		{
+			glDeleteProgram(program);
+		}
 	}
 }

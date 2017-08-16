@@ -10,7 +10,7 @@ import static org.lwjgl.opengl.GL30.*;
 
 public class Renderer
 {
-	public void render(Model model)
+	public static void render(Model model)
 	{
 		glBindVertexArray(model.getVaoID());
 		glEnableVertexAttribArray(0);

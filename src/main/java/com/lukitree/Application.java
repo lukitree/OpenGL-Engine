@@ -1,10 +1,10 @@
 package com.lukitree;
 
-import com.lukitree.engine.Loader;
+import com.lukitree.engine.loader.Loader;
 import com.lukitree.engine.OpenGLProgram;
 import com.lukitree.engine.Renderer;
 import com.lukitree.engine.data.Model;
-import com.lukitree.engine.loader.ShaderLoader;
+import com.lukitree.engine.loader.ProgramLoader;
 import org.joml.Vector3f;
 
 import static org.lwjgl.opengl.GL11.*;
@@ -12,9 +12,6 @@ import static org.lwjgl.opengl.GL20.glUseProgram;
 
 public class Application extends OpenGLProgram
 {
-	Loader loader = new Loader();
-	Renderer renderer = new Renderer();
-
 	Model model;
 
 	int shaderProgram;
@@ -24,7 +21,7 @@ public class Application extends OpenGLProgram
 	{
 		glClearColor(0.0f, 0.0f, 1.0f, 0.8f);
 
-		shaderProgram = ShaderLoader.createProgram();
+		shaderProgram = ProgramLoader.createProgram();
 		glUseProgram(shaderProgram);
 
 		final float[] vertices =
@@ -47,27 +44,27 @@ public class Application extends OpenGLProgram
 						0.0f, 0.0f,
 						1.0f, 0.0f,
 						1.0f, 1.0f,
-				};
+						};
 
-		model = loader.loadToVAO(vertices, indices, "face.png", texCoords);
+		model = Loader.loadToVAO(vertices, indices, "face.png", texCoords);
 	}
 
 	@Override
 	protected void cleanup()
 	{
-		loader.cleanup();
+		Loader.close();
 	}
 
 	@Override
 	protected void update(float dt)
 	{
-		model.rotate(new Vector3f(0.1f * dt, 0.1f * dt, 0.1f * dt));
+		model.rotate(new Vector3f(0.5f * dt, 1.0f * dt, 0.75f * dt));
 	}
 
 	@Override
 	protected void render(float currentTime)
 	{
-		renderer.render(model);
+		Renderer.render(model);
 	}
 
 	public static void main(String[] args)
