@@ -61,7 +61,7 @@ public class Application extends OpenGLProgram
 	@Override
 	protected void update(float dt)
 	{
-		model.rotate(new Vector3f(1.1f * dt, 1.0f * dt, 1.0f * dt));
+		model.rotate(new Vector3f(0.1f * dt, 0.1f * dt, 0.1f * dt));
 	}
 
 	@Override
