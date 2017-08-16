@@ -14,7 +14,7 @@ layout (location = 10) uniform mat4 MVP;
 void main()
 {
 	gl_Position = MVP * position;
-	//gl_Position = position;
-	vs_out.color = position + vec4(0.5, 0.5, 0.5, 0.0);
+
+	vs_out.color = vec4(gl_Position.zzz, 1.0);
 	vs_out.texCoord = texCoord;
 }
