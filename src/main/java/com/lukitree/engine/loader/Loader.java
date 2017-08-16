@@ -1,12 +1,8 @@
-package com.lukitree.engine;
+package com.lukitree.engine.loader;
 
 import com.lukitree.engine.data.Model;
-import com.sun.prism.Texture;
-import jdk.internal.org.objectweb.asm.util.Textifiable;
 import org.apache.commons.io.IOUtils;
 import org.lwjgl.BufferUtils;
-import org.lwjgl.glfw.GLFW;
-import org.lwjgl.opengl.GL42;
 import org.lwjgl.system.MemoryStack;
 
 import java.io.IOException;
@@ -20,16 +16,15 @@ import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL15.*;
 import static org.lwjgl.opengl.GL20.*;
 import static org.lwjgl.opengl.GL30.*;
-import static org.lwjgl.opengl.GL42.*;
 import static org.lwjgl.stb.STBImage.*;
 
 public class Loader
 {
-	private List<Integer> vaos = new ArrayList<>();
-	private List<Integer> vbos = new ArrayList<>();
-	private List<Integer> textures = new ArrayList<>();
+	private static List<Integer> vaos = new ArrayList<>();
+	private static List<Integer> vbos = new ArrayList<>();
+	private static List<Integer> textures = new ArrayList<>();
 
-	public Model loadToVAO(float[] positions, int[] indices, String texturePath, float[] texCoords)
+	public static Model loadToVAO(float[] positions, int[] indices, String texturePath, float[] texCoords)
 	{
 		int vaoID = createVAO();
 
@@ -41,7 +36,7 @@ public class Loader
 		return new Model(vaoID, loadTexture(texturePath), indices.length);
 	}
 
-	public int loadTexture(String filename)
+	public static int loadTexture(String filename)
 	{
 		ClassLoader classLoader = Loader.class.getClassLoader();
 		ByteBuffer textureData = null;
@@ -94,7 +89,7 @@ public class Loader
 		return texture;
 	}
 
-	private int createVAO()
+	private static int createVAO()
 	{
 		int vaoID = glGenVertexArrays();
 		vaos.add(vaoID);
@@ -104,7 +99,7 @@ public class Loader
 		return vaoID;
 	}
 
-	private void storeDataInAttributeList(int attributeNumber, float[] data, int size)
+	private static void storeDataInAttributeList(int attributeNumber, float[] data, int size)
 	{
 		int vboID = glGenBuffers();
 		vbos.add(vboID);
@@ -115,12 +110,12 @@ public class Loader
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 	}
 
-	private void unbindVAO()
+	private static void unbindVAO()
 	{
 		glBindVertexArray(0);
 	}
 
-	public void cleanup()
+	public static void close()
 	{
 		for (int vao : vaos)
 		{
@@ -138,7 +133,7 @@ public class Loader
 		}
 	}
 
-	private void bindIndicesBuffer(int[] indices)
+	private static void bindIndicesBuffer(int[] indices)
 	{
 		int vboID = glGenBuffers();
 		vbos.add(vboID);
