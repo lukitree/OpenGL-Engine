@@ -1,5 +1,7 @@
 package com.lukitree.engine;
 
+import com.lukitree.engine.data.Camera;
+import com.lukitree.engine.data.Entity;
 import com.lukitree.engine.data.Model;
 import org.joml.Matrix4f;
 
@@ -10,22 +12,38 @@ import static org.lwjgl.opengl.GL30.*;
 
 public class Renderer
 {
-	public static void render(Model model)
+	private static Camera camera = null;
+
+	public static void setCamera(Camera camera)
 	{
+		Renderer.camera = camera;
+	}
+
+	public static void render(Entity entity)
+	{
+		final Model model = entity.getModel();
+
 		glBindVertexArray(model.getVaoID());
 		glEnableVertexAttribArray(0);
 		glEnableVertexAttribArray(1);
+		glEnableVertexAttribArray(2);
 
 		glActiveTexture(model.getTextureID());
 		glBindTexture(GL_TEXTURE_2D, model.getTextureID());
 
 		float[] mvpTransform = new float[16];
 
-		Matrix4f modelMatrix = model.getTransform();
+		Matrix4f modelMatrix = new Matrix4f(entity.getTransform());
 
-		Matrix4f viewMatrix = new Matrix4f().translate(0.0f,
-		                                               0.0f,
-		                                               -3.0f);
+		Matrix4f viewMatrix;
+		if(camera == null)
+		{
+			viewMatrix = new Matrix4f().translate(0.0f, 0.0f, -3.0f);
+		}
+		else
+		{
+			viewMatrix = new Matrix4f(camera.getViewMatrix());
+		}
 
 		Matrix4f projMatrix = new Matrix4f().perspective((float) Math.toRadians(30.f),
 		                                                 (float) 1024 / 768,
@@ -39,6 +57,7 @@ public class Renderer
 		glDrawElements(GL_TRIANGLES, model.getVertexCount(), GL_UNSIGNED_INT, 0);
 		glDisableVertexAttribArray(0);
 		glDisableVertexAttribArray(1);
+		glDisableVertexAttribArray(2);
 		glBindVertexArray(0);
 	}
 }

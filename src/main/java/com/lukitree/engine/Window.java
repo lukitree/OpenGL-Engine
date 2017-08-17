@@ -9,6 +9,8 @@ import org.lwjgl.glfw.GLFWWindowSizeCallback;
 import org.lwjgl.system.MemoryStack;
 
 import java.nio.IntBuffer;
+import java.util.HashSet;
+import java.util.Set;
 
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL.createCapabilities;
@@ -22,8 +24,12 @@ public class Window
 
 	private int WIDTH, HEIGHT;
 
+	private Set<Integer> keysPressed;
+
 	public Window(int width, int height, String title)
 	{
+		keysPressed = new HashSet<>();
+
 		WIDTH = width;
 		HEIGHT = height;
 
@@ -42,6 +48,14 @@ public class Window
 			if(key == GLFW_KEY_ESCAPE && action == GLFW_RELEASE)
 			{
 				glfwSetWindowShouldClose(window, true);
+			}
+			else if (action == GLFW_PRESS)
+			{
+				keysPressed.add(key);
+			}
+			else if (action == GLFW_RELEASE)
+			{
+				keysPressed.remove(key);
 			}
 		});
 
@@ -76,7 +90,7 @@ public class Window
 		});
 
 		glfwMakeContextCurrent(window);
-		glfwSwapInterval(1);
+		glfwSwapInterval(0);
 		glfwShowWindow(window);
 
 		createCapabilities();
@@ -88,6 +102,11 @@ public class Window
 
 		System.out.println("LWJGL:]t" + Version.getVersion());
 		System.out.println("OpenGL:\t" + glGetString(GL_VERSION));
+	}
+
+	public final Set<Integer> getKeysPressed()
+	{
+		return keysPressed;
 	}
 
 	public int width()
