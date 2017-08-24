@@ -17,6 +17,7 @@ public class StaticShader extends Shader
 	final static int UNIFORM_PROJECTION_TRANSFORM = 18;
 	final static int UNIFORM_AMBIENT_LIGHT_LEVEL = 19;
 	final static int UNIFORM_USE_FAKE_LIGHTING = 20;
+	final static int UNIFORM_SKY_COLOR = 21;
 
 	private static final String VERTEX_FILENAME = "vertexShader.glsl";
 	private static final String FRAGMENT_FILENAME = "fragmentShader.glsl";
@@ -63,6 +64,11 @@ public class StaticShader extends Shader
 		super.loadTexture(texture.getTextureID());
 		super.loadFloat(UNIFORM_SHINE_DAMPER, texture.getShineDamper());
 		super.loadFloat(UNIFORM_REFLECTIVITY, texture.getReflectivity());
+	}
+
+	public void loadSkyColor(float r, float g, float b)
+	{
+		super.loadVector(UNIFORM_SKY_COLOR, new Vector3f(r,g,b));
 	}
 
 	public void loadLight(Light light)

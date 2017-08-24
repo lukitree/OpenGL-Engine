@@ -31,6 +31,7 @@ public class MasterRenderer
 	private List<Terrain> terrains = new ArrayList<>();
 
 	private boolean renderWireframe = false;
+	private float[] skyColor = { 0.0f, 0.8f, 1.0f, 1.0f };
 
 	public MasterRenderer(Window window)
 	{
@@ -39,7 +40,7 @@ public class MasterRenderer
 		glEnable(GL_DEPTH_TEST);
 		glDepthFunc(GL_LEQUAL);
 		enableCulling();
-		glClearColor(0.0f, 0.8f, 1.0f, 1.0f);
+		glClearColor(skyColor[0], skyColor[1], skyColor[2], skyColor[3]);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		this.window = window;
@@ -64,15 +65,18 @@ public class MasterRenderer
 	public void render(Light sun, Camera camera)
 	{
 		window.swapBuffers();
+		glClearColor(skyColor[0], skyColor[1], skyColor[2], skyColor[3]);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		syncToWindow();
 
 		entityShader.start();
+		entityShader.loadSkyColor(skyColor[0], skyColor[1], skyColor[2]);
 		entityShader.loadLight(sun);
 		entityRenderer.render(entities, camera, projectionMatrix);
 		entityShader.stop();
 
 		terrainShader.start();
+		terrainShader.loadSkyColor(skyColor[0], skyColor[1], skyColor[2]);
 		terrainShader.loadLight(sun);
 		terrainRenderer.render(terrains, camera, projectionMatrix);
 		terrainShader.stop();
@@ -120,7 +124,7 @@ public class MasterRenderer
 	public void toggleWireFrame()
 	{
 		renderWireframe = !renderWireframe;
-		if(renderWireframe) glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+		if (renderWireframe) glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 		else glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	}
 }

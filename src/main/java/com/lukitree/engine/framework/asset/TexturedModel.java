@@ -31,9 +31,4 @@ public class TexturedModel extends Model
 	{
 		return texture;
 	}
-
-	public void setTexture(Texture texture)
-	{
-		this.texture = texture;
-	}
 }

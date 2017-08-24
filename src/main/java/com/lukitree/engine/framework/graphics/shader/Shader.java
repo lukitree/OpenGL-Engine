@@ -47,10 +47,15 @@ public abstract class Shader
 		glUniformMatrix4fv(location, false, matrix.get(new float[16]));
 	}
 
+	protected void loadTexture(int texture, int location)
+	{
+		glActiveTexture(GL_TEXTURE0 + location);
+		glBindTexture(GL_TEXTURE_2D, texture);
+	}
+
 	protected void loadTexture(int texture)
 	{
-		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, texture);
+		loadTexture(texture, 0);
 	}
 
 	private static void linkProgram(int programID)

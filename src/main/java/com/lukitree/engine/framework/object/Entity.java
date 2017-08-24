@@ -103,6 +103,16 @@ public class Entity
 		return this.pos.distance(position);
 	}
 
+	public Vector3f getRotation()
+	{
+		return rot;
+	}
+
+	public Vector3f getPosition()
+	{
+		return pos;
+	}
+
 	public Matrix4f getTransform()
 	{
 		Matrix4f transform = new Matrix4f();

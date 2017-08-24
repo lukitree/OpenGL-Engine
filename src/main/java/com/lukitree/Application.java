@@ -16,6 +16,8 @@ import java.lang.Math;
 import java.lang.String;
 import java.util.*;
 
+import static com.lukitree.engine.framework.asset.manager.enums.Textures.*;
+
 public class Application extends Game
 {
 	private MasterRenderer renderer;
@@ -32,9 +34,13 @@ public class Application extends Game
 	private Entity earth = new Entity(models.get(Models.EARTH));
 	private Entity dragon = new Entity(models.get(Models.DRAGON));
 	private Entity sunRep = new Entity(models.get(Models.SUN));
+	private Player player = new Player(models.get(Models.PLAYER));
 
-	private Terrain terrain = new Terrain(0,0, modelLoader, textures.get(Textures.GRASS));
-	private Terrain terrain2 = new Terrain(-1,0, modelLoader, textures.get(Textures.GRASS));
+	private TerrainTexturePack terrainTexturePack = new TerrainTexturePack(textures.get(GRASS), textures.get(MUD),
+	                                                                       textures.get(FLOWERS), textures.get(PATH));
+	private TerrainTexture blendMap = new TerrainTexture(textures.get(BLEND_MAP01));
+	private Terrain terrain = new Terrain(0, 0, models.get(Models.TERRAIN_FLAT), terrainTexturePack, blendMap);
+	private Terrain terrain2 = new Terrain(-1,0, models.get(Models.TERRAIN_FLAT), terrainTexturePack, blendMap);
 
 	private Map<Key, KeyEvent> keysDown = new HashMap<>();
 
@@ -58,12 +64,16 @@ public class Application extends Game
 		earth.scale(100);
 		earth.setPosition(-400, 200, 1000);
 
-		dragon.scale(10);
+		dragon.scale(5);
 		dragon.setPosition(0,0, 600);
+
+		player.scale(0.25f);
+		player.setPosition(0,0, 410);
 
 		sunRep.scale(100);
 
-		camera.setPosition(0, 10.f, 400);
+		camera.setPosition(0, 5.f, 400);
+
 
 		for(int i = 0; i < 50; ++i)
 		{
@@ -165,16 +175,16 @@ public class Application extends Game
 							window.hideCursor(!menu);
 							break;
 
-						case W:
+						case UP_ARROW:
 							camera.move(Camera.Move.FOWARD, true);
 							break;
-						case A:
+						case LEFT_ARROW:
 							camera.move(Camera.Move.LEFT, true);
 							break;
-						case S:
+						case DOWN_ARROW:
 							camera.move(Camera.Move.BACKWARD, true);
 							break;
-						case D:
+						case RIGHT_ARROW:
 							camera.move(Camera.Move.RIGHT, true);
 							break;
 						case Z:
@@ -182,6 +192,19 @@ public class Application extends Game
 							break;
 						case SPACE:
 							camera.move(Camera.Move.UP, true);
+							break;
+
+						case W:
+							player.setMovingForward(true);
+							break;
+						case S:
+							player.setMovingBackwards(true);
+							break;
+						case A:
+							player.setTurningLeft(true);
+							break;
+						case D:
+							player.setTurningRight(true);
 							break;
 
 						case F1:
@@ -196,16 +219,16 @@ public class Application extends Game
 					keysDown.remove(ev.key.code);
 					switch(ev.key.code)
 					{
-						case W:
+						case UP_ARROW:
 							camera.move(Camera.Move.FOWARD, false);
 							break;
-						case A:
+						case LEFT_ARROW:
 							camera.move(Camera.Move.LEFT, false);
 							break;
-						case S:
+						case DOWN_ARROW:
 							camera.move(Camera.Move.BACKWARD, false);
 							break;
-						case D:
+						case RIGHT_ARROW:
 							camera.move(Camera.Move.RIGHT, false);
 							break;
 						case Z:
@@ -213,6 +236,19 @@ public class Application extends Game
 							break;
 						case SPACE:
 							camera.move(Camera.Move.UP, false);
+							break;
+
+						case W:
+							player.setMovingForward(false);
+							break;
+						case S:
+							player.setMovingBackwards(false);
+							break;
+						case A:
+							player.setTurningLeft(false);
+							break;
+						case D:
+							player.setTurningRight(false);
 							break;
 					}
 					break;
@@ -226,9 +262,11 @@ public class Application extends Game
 	@Override
 	protected void update(float dt)
 	{
+
 		float dtMult = dt * timeMultiplier;
 		totalTime += dtMult * 10;
 		camera.update(dt);
+		player.update(dt);
 
 		KeyEvent timeButton = keysDown.get(Key.TAB);
 		if(timeButton != null)
@@ -247,9 +285,14 @@ public class Application extends Game
 		earth.rotate(0, rotY / 2, 0);
 
 		Vector3f sunPath = new Vector3f();
-		sunPath.y = (float)Math.cos(Math.toRadians(totalTime)) * 9000;
-		sunPath.x = (float)Math.sin(Math.toRadians(totalTime)) * 9000;
-		sunPath.z = 400;
+
+		float tX = (float)Math.sin(Math.toRadians(totalTime));
+		//float tY = (float)Math.cos(Math.toRadians(totalTime));
+		float tY = 2000;
+
+		sunPath.x = tX * 9000;
+		sunPath.y = tY * 9000;
+		sunPath.z = 0;
 		sun.setPosition(sunPath);
 		sunRep.setPosition(sunPath);
 		sunRep.rotate(0, 20.f * dtMult, 0);
@@ -258,6 +301,14 @@ public class Application extends Game
 	@Override
 	protected void render(float currentTime)
 	{
+		final float TOD = (float)Math.cos(Math.toRadians(totalTime));
+
+		renderer.processEntity(cube);
+		renderer.processEntity(earth);
+		renderer.processEntity(dragon);
+		renderer.processEntity(sunRep);
+		renderer.processEntity(player);
+
 		renderer.processTerrain(terrain);
 		renderer.processTerrain(terrain2);
 
@@ -271,11 +322,6 @@ public class Application extends Game
 		{
 			renderer.processEntity(el);
 		}
-
-		renderer.processEntity(cube);
-		renderer.processEntity(earth);
-		renderer.processEntity(dragon);
-		renderer.processEntity(sunRep);
 
 		for(Entity el : bunchaCubes)
 		{

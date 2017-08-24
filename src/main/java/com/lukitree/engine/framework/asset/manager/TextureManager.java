@@ -4,6 +4,8 @@ import com.lukitree.engine.framework.asset.*;
 import com.lukitree.engine.framework.asset.loader.*;
 import com.lukitree.engine.framework.asset.manager.enums.*;
 
+import static com.lukitree.engine.framework.asset.manager.enums.Textures.*;
+
 public class TextureManager extends AssetManager<Textures, Texture>
 {
 	TextureLoader loader = new TextureLoader();
@@ -11,20 +13,28 @@ public class TextureManager extends AssetManager<Textures, Texture>
 	public TextureManager()
 	{
 		System.out.println("Loading textures...");
-		load(Textures.CUBE, "cube.png", 10, 1);
-		load(Textures.EARTH, "earth.jpg", 100, 1);
-		load(Textures.WHITE, "white.png", 1000, 1);
-		load(Textures.GRASS, "grass.png");
-		load(Textures.GRASS_BUSH, "grassBush.png");
-		load(Textures.SUN, "sun.png", 100, 0.1f);
-		load(Textures.TREE, "tree.png");
-		load(Textures.GOLD, "gold.png", 0.1f, 0.15f);
-		System.out.println("done.");
+		load(CUBE, "cube.png", 10, 1);
+		load(EARTH, "earth.jpg", 100, 1);
+		load(WHITE, "white.png", 1000, 1);
+		load(GRASS, "grass.png");
+		load(FLOWERS, "grassFlowers.png");
+		load(MUD, "mud.png");
+		load(PATH, "path.png");
+		load(GRASS_BUSH, "grassBush.png");
+		load(SUN, "sun.png", 100, 0.1f);
+		load(TREE, "tree.png");
+		load(GOLD, "gold.png", 0.1f, 0.1f);
+		load(PLAYER, "player.png");
+		System.out.println("done!");
+
+		System.out.println("Loading blend maps...");
+		load(BLEND_MAP01, "blendmaps/blendMap.png");
+		System.out.println("done!");
 	}
 
 	private void load(Textures id, String filename, float shineDamper, float reflectivity)
 	{
-		System.out.println(filename);
+		System.out.println("-> " + filename);
 		Texture texture = loader.loadTexture(filename);
 		texture.setShineDamper(shineDamper);
 		texture.setReflectivity(reflectivity);

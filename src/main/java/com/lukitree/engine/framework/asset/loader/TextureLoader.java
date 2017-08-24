@@ -19,7 +19,6 @@ import static org.lwjgl.stb.STBImage.*;
 public class TextureLoader
 {
 	private List<Integer> textures = new ArrayList<>();
-	private Texture EMPTY_TEXTURE = null;
 
 	public Texture loadTexture(String filename)
 	{

@@ -1,13 +1,18 @@
 package com.lukitree.engine.framework.asset.manager.enums;
 
-public enum Models
+public enum Textures
 {
-	DRAGON,
 	CUBE,
 	EARTH,
+	WHITE,
 	GRASS,
+	MUD,
+	FLOWERS,
+	PATH,
+	GRASS_BUSH,
 	SUN,
 	TREE,
-	TERRAIN_FLAT,
+	GOLD,
+	BLEND_MAP01,
 	PLAYER,
 }

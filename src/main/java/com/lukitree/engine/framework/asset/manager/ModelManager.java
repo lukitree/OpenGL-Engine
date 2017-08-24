@@ -17,7 +17,9 @@ public class ModelManager extends AssetManager<Models, Model>
 		load(Models.GRASS, "grass.obj", textures.get(Textures.GRASS_BUSH), true, true);
 		load(Models.SUN, "sun.obj", textures.get(Textures.SUN), false, false, 2.5f);
 		load(Models.TREE, "tree.obj", textures.get(Textures.TREE), false, false);
-		System.out.println("done.");
+		load(Models.TERRAIN_FLAT, "terrain.obj");
+		load(Models.PLAYER, "player.obj", textures.get(Textures.PLAYER));
+		System.out.println("done!");
 	}
 
 	private void load(Models id, String filename)
@@ -33,7 +35,7 @@ public class ModelManager extends AssetManager<Models, Model>
 
 	private void load(Models id, String filename, Texture texture, boolean useFakeLighting, boolean hasTransparency, float ambientLightLevel)
 	{
-		System.out.println(filename);
+		System.out.println("-> " + filename);
 		TexturedModel model = new TexturedModel(loader.loadOBJ(filename), texture);
 		model.setUseFakeLighting(useFakeLighting);
 		model.setHasTransparency(hasTransparency);

@@ -36,17 +36,10 @@ public class TerrainRenderer
 		Model model = terrain.getModel();
 
 		glBindVertexArray(model.getVaoID());
-		if(model instanceof TexturedModel)
-		{
-			Texture texture = ((TexturedModel)model).getTexture();
-			Attribute.TEX_COORD.enable();
-			shader.loadTexture(texture);
-			glActiveTexture(GL_TEXTURE_2D);
-			glBindTexture(GL_TEXTURE_2D, texture.getTextureID());
-		}
-
 		Attribute.POSITION.enable();
+		Attribute.TEX_COORD.enable();
 		Attribute.NORMAL.enable();
+		shader.loadTextures(terrain.getTexturePack(), terrain.getBlendMap());
 	}
 
 	private void unbindTerrain()
