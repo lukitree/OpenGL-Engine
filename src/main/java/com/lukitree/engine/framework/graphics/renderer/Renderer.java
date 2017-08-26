@@ -16,7 +16,7 @@ public class Renderer<S extends Shader, M extends Model, E>
 		this.shader = shader;
 	}
 
-	public void render(Map<M, List<E>> entities, Camera camera, Matrix4f projectionTransform)
+	public void render(Map<M, List<E>> entities, FreeRoamCamera camera, Matrix4f projectionTransform)
 	{
 
 	}

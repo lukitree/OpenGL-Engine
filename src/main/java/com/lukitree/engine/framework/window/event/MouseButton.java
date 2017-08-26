@@ -1,5 +1,7 @@
 package com.lukitree.engine.framework.window.event;
 
+import java.util.*;
+
 public enum MouseButton
 {
 	NONE,

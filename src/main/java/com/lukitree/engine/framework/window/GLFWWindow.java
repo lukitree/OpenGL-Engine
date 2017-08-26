@@ -18,7 +18,6 @@ public class GLFWWindow implements Window
 	private int width, height;
 	private boolean isOpen = true;
 	private boolean isCursorHidden = false;
-	private Vector2f mousePosition = new Vector2f();
 
 	private Queue<Event> eventQueue = new LinkedList<>();
 
@@ -82,8 +81,8 @@ public class GLFWWindow implements Window
 			@Override
 			public void invoke(long l, int i, int i1)
 			{
-				int[] w = new int[1];
-				int[] h = new int[1];
+				int[] w = {0};
+				int[] h = {0};
 
 				glfwGetWindowSize(window, w, h);
 
@@ -103,6 +102,11 @@ public class GLFWWindow implements Window
 
 	private void setupKeyCallback()
 	{
+		double[] x = {0};
+		double[] y = {0};
+		glfwGetCursorPos(window, x, y);
+		Mouse.position = new Vector2f((float)x[0], (float)y[0]);
+
 		glfwSetKeyCallback(window, (window, key, scancode, action, mods) -> {
 			Event event = new Event();
 
@@ -210,6 +214,9 @@ public class GLFWWindow implements Window
 				case GLFW_KEY_PAGE_UP:
 					event.key.code = Key.PAGE_UP;
 					break;
+				case GLFW_KEY_PAGE_DOWN:
+					event.key.code = Key.PAGE_DOWN;
+					break;
 				case GLFW_KEY_HOME:
 					event.key.code = Key.HOME;
 					break;
@@ -253,7 +260,7 @@ public class GLFWWindow implements Window
 					event.key.code = Key.NINE;
 					break;
 				case GLFW_KEY_MINUS:
-					event.key.code = Key.MINUS;
+					event.key.code = Key.SUBTRACT;
 					break;
 				case GLFW_KEY_EQUAL:
 					event.key.code = Key.EQUAL;
@@ -294,15 +301,56 @@ public class GLFWWindow implements Window
 				case GLFW_KEY_F12:
 					event.key.code = Key.F12;
 					break;
+				case GLFW_KEY_LEFT_SHIFT:
+					event.key.code = Key.LSHIFT;
+					break;
+				case GLFW_KEY_RIGHT_SHIFT:
+					event.key.code = Key.RSHIFT;
+					break;
+				case GLFW_KEY_LEFT_ALT:
+					event.key.code = Key.LALT;
+					break;
+				case GLFW_KEY_RIGHT_ALT:
+					event.key.code = Key.RALT;
+					break;
+				case GLFW_KEY_LEFT_CONTROL:
+					event.key.code = Key.LCTRL;
+					break;
+				case GLFW_KEY_RIGHT_CONTROL:
+					event.key.code = Key.RCTRL;
+					break;
+				case GLFW_KEY_COMMA:
+					event.key.code = Key.COMMA;
+					break;
+				case GLFW_KEY_PERIOD:
+					event.key.code = Key.PERIOD;
+					break;
+				case GLFW_KEY_SEMICOLON:
+					event.key.code = Key.SEMICOLON;
+					break;
+				case GLFW_KEY_APOSTROPHE:
+					event.key.code = Key.QUOTE;
+					break;
+				case GLFW_KEY_LEFT_BRACKET:
+					event.key.code = Key.LBRACKET;
+					break;
+				case GLFW_KEY_RIGHT_BRACKET:
+					event.key.code = Key.RBRACKET;
+					break;
+				case GLFW_KEY_SLASH:
+					event.key.code = Key.SLASH;
+					break;
 			}
 
 			switch (action)
 			{
 				case GLFW_PRESS:
 					event.type = Event.Type.KeyPressed;
+					Keyboard.keysPressed.add(event.key.code);
 					break;
 				case GLFW_RELEASE:
 					event.type = Event.Type.KeyReleased;
+					Keyboard.keysPressed.remove(event.key.code);
 					break;
 			}
 
@@ -328,58 +376,58 @@ public class GLFWWindow implements Window
 
 	private void setupMouseCallback()
 	{
-		glfwSetCursorPosCallback(window, new GLFWCursorPosCallback()
-		{
-			@Override
-			public void invoke(long window, double posX, double posY)
-			{
-				mousePosition.x = (float)posX;
-				mousePosition.y = (float)posY;
-			}
+		glfwSetCursorPosCallback(window, (window, xpos, ypos) -> {
+			Event event = new Event();
+			event.type = Event.Type.MouseMoved;
+			event.mouseMove.x = (float)xpos;
+			event.mouseMove.y = (float)ypos;
+			eventQueue.add(event);
+
+			Mouse.position.x = (float)xpos;
+			Mouse.position.y = (float)ypos;
 		});
 
-		glfwSetMouseButtonCallback(window, new GLFWMouseButtonCallback()
-		{
-			@Override
-			public void invoke(long window, int button, int action, int mods)
+		glfwSetMouseButtonCallback(window, (window, button, action, mods) -> {
+			Event event = new Event();
+
+			switch (button)
 			{
-				Event event = new Event();
-				event.type = Event.Type.MouseButtonPressed;
-				switch (button)
-				{
-					case GLFW_MOUSE_BUTTON_1:
-						event.mouseButton.button = MouseButton.LEFT_CLICK;
-						break;
-					case GLFW_MOUSE_BUTTON_2:
-						event.mouseButton.button = MouseButton.RIGHT_CLICK;
-						break;
-					case GLFW_MOUSE_BUTTON_3:
-						event.mouseButton.button = MouseButton.MIDDLE_CLICK;
-						break;
-				}
-				event.mouseButton.x = mousePosition.x;
-				event.mouseButton.y = mousePosition.y;
-				eventQueue.add(event);
+				case GLFW_MOUSE_BUTTON_1:
+					event.mouseButton.button = MouseButton.LEFT_CLICK;
+					break;
+				case GLFW_MOUSE_BUTTON_2:
+					event.mouseButton.button = MouseButton.RIGHT_CLICK;
+					break;
+				case GLFW_MOUSE_BUTTON_3:
+					event.mouseButton.button = MouseButton.MIDDLE_CLICK;
+					break;
 			}
+
+			switch (action)
+			{
+				case GLFW_PRESS:
+					event.type = Event.Type.MouseButtonPressed;
+					Mouse.buttonsPressed.add(event.mouseButton.button);
+					break;
+				case GLFW_RELEASE:
+					event.type = Event.Type.MouseButtonReleased;
+					Mouse.buttonsPressed.remove(event.mouseButton.button);
+					break;
+			}
+
+			event.mouseButton.x = Mouse.position.x;
+			event.mouseButton.y = Mouse.position.y;
+			eventQueue.add(event);
 		});
 
-		glfwSetCursorPosCallback(window, new GLFWCursorPosCallback()
-		{
-			private Vector2d lastPosition;
-
-			@Override
-			public void invoke(long l, double v, double v1)
-			{
-				if(lastPosition == null) lastPosition = new Vector2d(v, v1);
-				Event event = new Event();
-				event.type = Event.Type.MouseMoved;
-				event.mouseMove.x = (float)(v - lastPosition.x);
-				event.mouseMove.y = (float)(v1 - lastPosition.y);
-				eventQueue.add(event);
-
-				lastPosition.x = v;
-				lastPosition.y = v1;
-			}
+		glfwSetScrollCallback(window, (window, xoffset, yoffset) -> {
+			Event event = new Event();
+			event.type = Event.Type.MouseWheelMoved;
+			event.mouseWheel.delta = (float)yoffset - Mouse.wheelPosition;
+			event.mouseWheel.x = Mouse.position.x;
+			event.mouseWheel.y = Mouse.position.y;
+			eventQueue.add(event);
+			Mouse.wheelPosition += (float)yoffset;
 		});
 	}
 
@@ -424,7 +472,7 @@ public class GLFWWindow implements Window
 	public void hideCursor(boolean hide)
 	{
 		int mode;
-		if(hide)
+		if (hide)
 		{
 			isCursorHidden = true;
 			mode = GLFW_CURSOR_DISABLED;

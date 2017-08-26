@@ -1,5 +1,7 @@
 package com.lukitree.engine.framework.window.event;
 
+import java.util.*;
+
 public enum Key
 {
 	NONE,
@@ -53,7 +55,7 @@ public enum Key
 	SEVEN,
 	EIGHT,
 	NINE,
-	MINUS,
+	SUBTRACT,
 	EQUAL,
 	F1,
 	F2,
@@ -67,5 +69,5 @@ public enum Key
 	F10,
 	F11,
 	F12,
-
+	LSHIFT, RSHIFT, LALT, LCTRL, RALT, RCTRL, COMMA, PERIOD, SEMICOLON, QUOTE, LBRACKET, RBRACKET, SLASH;
 }

@@ -15,7 +15,7 @@ public class MasterRenderer
 {
 	private static final float FOV = 60.f;
 	private static final float NEAR_PLANE = 0.1f;
-	private static final float FAR_PLANE = 20000.0f;
+	private static final float FAR_PLANE = 650.0f;
 
 	private StaticShader entityShader = new StaticShader();
 	private TerrainShader terrainShader = new TerrainShader();
@@ -113,6 +113,13 @@ public class MasterRenderer
 		glViewport(0, 0, windowSize.x, windowSize.y);
 
 		projectionMatrix.setPerspective((float)Math.toRadians(FOV), (float)window.getSize().x / window.getSize().y, NEAR_PLANE, FAR_PLANE);
+
+		Vector2i size = window.getSize();
+
+		size.x /= 20;
+		size.y /= 20;
+
+		//projectionMatrix.setOrtho(-size.x, size.x, -size.y, size.y, NEAR_PLANE, FAR_PLANE);
 	}
 
 	public void close()

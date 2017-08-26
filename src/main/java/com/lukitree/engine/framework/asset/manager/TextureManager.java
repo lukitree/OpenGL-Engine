@@ -23,7 +23,7 @@ public class TextureManager extends AssetManager<Textures, Texture>
 		load(GRASS_BUSH, "grassBush.png");
 		load(SUN, "sun.png", 100, 0.1f);
 		load(TREE, "tree.png");
-		load(GOLD, "gold.png", 0.1f, 0.1f);
+		load(GOLD, "gold.png", 500f, 1f);
 		load(PLAYER, "player.png");
 		System.out.println("done!");
 

@@ -8,19 +8,14 @@ public class Entity
 {
 	private Model model;
 
-	private Vector3f rot;
-	private Vector3f pos;
-	private Vector3f scale;
-	private Vector3f origin;
+	private Vector3f rot = new Vector3f();
+	private Vector3f pos = new Vector3f();
+	private Vector3f scale = new Vector3f(1,1,1);
+	private Vector3f origin = new Vector3f();
 
 	public Entity(Model model)
 	{
 		this.model = model;
-
-		this.rot = new Vector3f(0.0f, 0.0f, 0.0f);
-		this.pos = new Vector3f(0.0f, 0.0f, 0.0f);
-		this.scale = new Vector3f(1.0f, 1.0f, 1.0f);
-		this.origin = new Vector3f(0, 0, 0);
 	}
 
 	public Model getModel()
@@ -117,8 +112,8 @@ public class Entity
 	{
 		Matrix4f transform = new Matrix4f();
 		transform.translate(pos)
-		         .rotate((float)Math.toRadians(rot.x), 1.0f, 0.0f, 0.0f)
 		         .rotate((float)Math.toRadians(rot.y), 0.0f, 1.0f, 0.0f)
+		         .rotate((float)Math.toRadians(rot.x), 1.0f, 0.0f, 0.0f)
 		         .rotate((float)Math.toRadians(rot.z), 0.0f, 0.0f, 1.0f)
 		         .scale(scale)
 		         .translate(origin);

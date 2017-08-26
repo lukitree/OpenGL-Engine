@@ -1,4 +1,4 @@
-package com.lukitree.engine;
+package com.lukitree.engine.framework;
 
 
 import com.lukitree.engine.framework.window.*;
@@ -29,9 +29,9 @@ public abstract class Game
 			lastFrame = currentFrame;
 
 			glfwPollEvents();
+
 			handleInput();
 			update(deltaTime);
-
 			render(currentFrame);
 		}
 		cleanup();

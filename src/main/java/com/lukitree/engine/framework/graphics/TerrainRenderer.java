@@ -8,7 +8,6 @@ import org.joml.*;
 import java.util.*;
 
 import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.opengl.GL13.*;
 import static org.lwjgl.opengl.GL30.*;
 
 public class TerrainRenderer
